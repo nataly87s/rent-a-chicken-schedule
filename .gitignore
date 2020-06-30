@@ -1,6 +1,9 @@
 # jetbrains
 .idea
 
+#build output
+build
+
 # Logs
 logs
 *.log

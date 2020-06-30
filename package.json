@@ -3,13 +3,21 @@
     "version": "1.0.0",
     "repository": "https://github.com/nataly87s/web-shipment-tracking",
     "author": "Natalya Shrits <nataly87s@gmail.com>",
+    "engines": {
+        "node": ">=14"
+    },
     "private": true,
     "workspaces": [
         "client",
         "server"
     ],
+    "scripts": {
+        "build": "lerna run --parallel build",
+        "start": "node ./server/build/index.js"
+    },
     "devDependencies": {
         "husky": "^4.2.5",
+        "lerna": "^3.22.1",
         "lint-staged": "^10.2.11",
         "prettier": "^2.0.5"
     }

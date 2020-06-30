@@ -1,0 +1,19 @@
+{
+    "name": "@shipment-tracking/server",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "tsc",
+        "start": "nodemon"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "tslib": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.6",
+        "@types/node": "^14.0.14",
+        "nodemon": "^2.0.4",
+        "ts-node": "^8.10.2",
+        "typescript": "^3.9.5"
+    }
+}

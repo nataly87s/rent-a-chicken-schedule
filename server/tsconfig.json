@@ -1,0 +1,12 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "incremental": true,
+        "target": "ES2016",
+        "module": "commonjs",
+        "sourceMap": true,
+        "outDir": "./build",
+        "importHelpers": true
+    },
+    "files": ["src/index.ts"]
+}

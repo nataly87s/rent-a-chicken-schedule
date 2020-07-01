@@ -1,5 +1,5 @@
 {
-    "name": "@shipment-tracking/server",
+    "name": "@rent-a-chicken-schedule/server",
     "version": "1.0.0",
     "scripts": {
         "build": "tsc",

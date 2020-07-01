@@ -1,5 +1,5 @@
 export type Entity = {
-    id: string;
+    id: number;
 };
 
 export default class ApiClient<T extends Entity> {

@@ -1,29 +1,35 @@
-import React, {useEffect, useState} from 'react';
-import './App.css';
-import CustomersClient, {Customer} from './clients/CustomersClient';
-import EventsClient, {Event} from './clients/EventsClient';
-import {AddCustomer} from './components/EditCustomer';
-import {AddEvent} from './components/EditEvent';
-
-const customersClient = new CustomersClient();
-const eventsClient = new EventsClient();
+import React, {useState} from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import CustomersPage from './components/CustomersPage';
+import EventsPage from './components/EventsPage';
+import ReportsPage from './components/ReportsPage';
+import {StoreProvider} from './context/StoreContext';
 
 const App = () => {
-    const [customers, setCustomers] = useState<Customer[]>();
-    const [events, setEvents] = useState<Event[]>();
-
-    useEffect(() => {
-        customersClient.getAll().then(setCustomers).catch(console.error); // todo handle error
-        eventsClient.getAll().then(setEvents).catch(console.error); // todo handle error
-    }, []);
+    const [tab, setTab] = useState(0);
 
     return (
-        <div className="App">
-            <div>{customers ? customers.map((c) => <p key={c.id}>{JSON.stringify(c)}</p>) : 'loading customers'}</div>
-            <div>{events ? events.map((e) => <p key={e.id}>{JSON.stringify(e)}</p>) : 'loading events'}</div>
-            <AddCustomer onSave={(customer) => setCustomers((c) => c?.concat(customer))} />
-            <AddEvent onSave={(event) => setEvents((e) => e?.concat(event))} />
-        </div>
+        <>
+            <CssBaseline />
+            <Container>
+                <AppBar position="static">
+                    <Tabs value={tab} onChange={(_, tab) => setTab(tab)}>
+                        <Tab label="Customers" />
+                        <Tab label="Events" />
+                        <Tab label="Reports" />
+                    </Tabs>
+                </AppBar>
+                <StoreProvider>
+                    {tab === 0 && <CustomersPage />}
+                    {tab === 1 && <EventsPage />}
+                    {tab === 2 && <ReportsPage />}
+                </StoreProvider>
+            </Container>
+        </>
     );
 };
 

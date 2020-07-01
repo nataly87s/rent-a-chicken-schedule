@@ -1,0 +1,17 @@
+{
+    "development": {
+        "username": "qfmpacwcblreks",
+        "password": "90403db5a8f3b399bc6a1b4fafc918074f805dc97d4866691167837e2c67ab2e",
+        "database": "dd8kg808cqktgb",
+        "host": "ec2-34-192-173-173.compute-1.amazonaws.com",
+        "dialect": "postgres",
+        "dialectOptions": {
+            "ssl": {
+                "rejectUnauthorized": false
+            }
+        }
+    },
+    "production": {
+        "use_env_variable": "DATABASE_URL"
+    }
+}

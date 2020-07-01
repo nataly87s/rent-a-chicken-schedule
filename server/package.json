@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "build": "tsc",
-        "start": "nodemon"
+        "start": "nodemon",
+        "migrate": "sequelize db:migrate"
     },
     "dependencies": {
         "dotenv": "^8.2.0",

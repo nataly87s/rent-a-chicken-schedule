@@ -1,5 +1,6 @@
 import {Sequelize} from 'sequelize';
-import {init as initUser} from './User';
+import initialize from './initialize';
+export * from './types';
 
 export const sequelize = new Sequelize(process.env.DATABASE_URL!, {
     dialectOptions: {
@@ -9,6 +10,4 @@ export const sequelize = new Sequelize(process.env.DATABASE_URL!, {
     },
 });
 
-initUser(sequelize);
-
-export {default as User} from './User';
+initialize(sequelize);

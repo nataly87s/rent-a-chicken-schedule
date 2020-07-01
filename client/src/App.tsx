@@ -1,21 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import CustomersClient, {Customer} from './clients/CustomersClient';
+import EventsClient, {Event} from './clients/EventsClient';
+import {AddCustomer} from './components/EditCustomer';
 
-function App() {
+const customersClient = new CustomersClient();
+const eventsClient = new EventsClient();
+
+const App = () => {
+    const [customers, setCustomers] = useState<Customer[]>();
+    const [events, setEvents] = useState<Event[]>();
+
+    useEffect(() => {
+        customersClient.getAll().then(setCustomers).catch(console.error); // todo handle error
+        eventsClient.getAll().then(setEvents).catch(console.error); // todo handle error
+    }, []);
+
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
+            <div>{customers ? customers.map((c) => <p key={c.id}>{JSON.stringify(c)}</p>) : 'loading customers'}</div>
+            <div>{events ? events.map((e) => <p key={e.id}>{JSON.stringify(e)}</p>) : 'loading events'}</div>
+            <AddCustomer onSave={(customer) => setCustomers((c) => c?.concat(customer))} />
         </div>
     );
-}
+};
 
 export default App;

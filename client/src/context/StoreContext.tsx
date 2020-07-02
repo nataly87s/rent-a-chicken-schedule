@@ -2,6 +2,7 @@ import React, {createContext, FunctionComponent, useCallback, useContext, useEff
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EventsClient, {Event} from '../clients/EventsClient';
 import CustomersClient, {Customer} from '../clients/CustomersClient';
+import cogoToast from 'cogo-toast';
 
 const customersClient = new CustomersClient();
 const eventsClient = new EventsClient();
@@ -88,6 +89,7 @@ export const StoreProvider: FunctionComponent = ({children}) => {
                     }),
                 );
             } catch (e) {
+                cogoToast.error('Failed loading schedule', {hideAfter: 0});
                 console.error('failed loading store', e);
             }
         })();

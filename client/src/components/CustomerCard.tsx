@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
+import cogoToast from 'cogo-toast';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -38,8 +39,12 @@ const useStyles = makeStyles({
     },
 });
 
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+
 const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
     const [customer, setCustomer] = useState(initialCustomer || emptyCustomer);
+    const [isSaving, setIsSaving] = useState(false);
     const {addCustomer, updateCustomer} = useStore();
     const classes = useStyles();
     const history = useHistory();
@@ -47,105 +52,119 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
     useEffect(() => setCustomer(initialCustomer || emptyCustomer), [initialCustomer]);
 
     const onSave = async () => {
-        if (initialCustomer) {
-            await updateCustomer(customer);
-        } else {
-            await addCustomer(customer);
-            setCustomer(emptyCustomer);
+        if (isSaving) {
+            return;
+        }
+        setIsSaving(true);
+        const {hide} = cogoToast.loading('Saving customer');
+        try {
+            if (initialCustomer) {
+                await updateCustomer(customer);
+            } else {
+                await addCustomer(customer);
+                setCustomer(emptyCustomer);
+            }
+            cogoToast.success('Customer saved successfully', {hideAfter: 15});
+        } catch (e) {
+            cogoToast.error('Failed to save customer', {hideAfter: 15});
+        } finally {
+            setIsSaving(false);
+            hide!();
         }
     };
 
     return (
-        <>
-            <Card>
-                <CardContent className={classes.container}>
-                    <TextField
-                        label="First Name"
-                        value={customer.firstName}
-                        onChange={(e) => {
-                            const firstName = e.target.value;
-                            setCustomer((c) => ({...c, firstName}));
-                        }}
-                        error={!customer.firstName}
-                    />
-                    <TextField
-                        label="Last Name"
-                        value={customer.lastName}
-                        onChange={(e) => {
-                            const lastName = e.target.value;
-                            setCustomer((c) => ({...c, lastName}));
-                        }}
-                        error={!customer.lastName}
-                    />
-                    <TextField
-                        label="Phone Number"
-                        value={customer.phoneNumber}
-                        onChange={(e) => {
-                            const phoneNumber = e.target.value;
-                            setCustomer((c) => ({...c, phoneNumber}));
-                        }}
-                        error={!customer.phoneNumber}
-                    />
-                    <TextField
-                        label="Email"
-                        value={customer.email}
-                        onChange={(e) => {
-                            const email = e.target.value;
-                            setCustomer((c) => ({...c, email}));
-                        }}
-                        error={!customer.email}
-                    />
-                    <TextareaAutosize
-                        className={classes.textArea}
-                        placeholder="Notes"
-                        rowsMin={5}
-                        rowsMax={5}
-                        value={customer.notes || ''}
-                        onChange={(e) => {
-                            const notes = e.target.value;
-                            setCustomer((c) => ({...c, notes}));
-                        }}
-                    />
-                </CardContent>
-                <CardActions className={classes.buttons}>
-                    {initialCustomer && (
-                        <>
-                            <Button size="small" onClick={() => history.push(`/reports/${customer.id}`)}>
-                                Report
-                            </Button>
-                            <Button size="small" onClick={() => history.push(`/events/${customer.id}`)}>
-                                Events
-                            </Button>
-                            <Button size="small" onClick={() => updateCustomer({...customer, archived: true})}>
-                                Archive
-                            </Button>
-                        </>
-                    )}
-                    {!initialCustomer && (
-                        <Button
-                            size="small"
-                            disabled={isEqual(emptyCustomer, customer)}
-                            onClick={() => setCustomer(emptyCustomer)}
-                        >
-                            Cancel
+        <Card>
+            <CardContent className={classes.container}>
+                <TextField
+                    label="First Name"
+                    value={customer.firstName}
+                    onChange={(e) => {
+                        const firstName = e.target.value;
+                        setCustomer((c) => ({...c, firstName}));
+                    }}
+                    error={!customer.firstName}
+                />
+                <TextField
+                    label="Last Name"
+                    value={customer.lastName}
+                    onChange={(e) => {
+                        const lastName = e.target.value;
+                        setCustomer((c) => ({...c, lastName}));
+                    }}
+                    error={!customer.lastName}
+                />
+                <TextField
+                    label="Phone Number"
+                    value={customer.phoneNumber}
+                    onChange={(e) => {
+                        const phoneNumber = e.target.value;
+                        setCustomer((c) => ({...c, phoneNumber}));
+                    }}
+                    error={!customer.phoneNumber || !phoneRegex.test(customer.phoneNumber)}
+                />
+                <TextField
+                    label="Email"
+                    value={customer.email}
+                    onChange={(e) => {
+                        const email = e.target.value;
+                        setCustomer((c) => ({...c, email}));
+                    }}
+                    error={!customer.email || !emailRegex.test(customer.email)}
+                />
+                <TextareaAutosize
+                    className={classes.textArea}
+                    placeholder="Notes"
+                    rowsMin={5}
+                    rowsMax={5}
+                    value={customer.notes || ''}
+                    onChange={(e) => {
+                        const notes = e.target.value;
+                        setCustomer((c) => ({...c, notes}));
+                    }}
+                />
+            </CardContent>
+            <CardActions className={classes.buttons}>
+                {initialCustomer && (
+                    <>
+                        <Button size="small" onClick={() => history.push(`/reports/${customer.id}`)}>
+                            Report
                         </Button>
-                    )}
+                        <Button size="small" onClick={() => history.push(`/events/${customer.id}`)}>
+                            Events
+                        </Button>
+                        <Button size="small" onClick={() => updateCustomer({...customer, archived: true})}>
+                            Archive
+                        </Button>
+                    </>
+                )}
+                {!initialCustomer && (
                     <Button
                         size="small"
-                        disabled={
-                            isEqual(initialCustomer || emptyCustomer, customer) ||
-                            !customer.firstName ||
-                            !customer.lastName ||
-                            !customer.phoneNumber ||
-                            !customer.email
-                        }
-                        onClick={onSave}
+                        disabled={isEqual(emptyCustomer, customer)}
+                        onClick={() => setCustomer(emptyCustomer)}
                     >
-                        {initialCustomer ? 'Save' : 'Create Customer'}
+                        Cancel
                     </Button>
-                </CardActions>
-            </Card>
-        </>
+                )}
+                <Button
+                    size="small"
+                    disabled={
+                        isSaving ||
+                        !customer.firstName ||
+                        !customer.lastName ||
+                        !customer.phoneNumber ||
+                        !phoneRegex.test(customer.phoneNumber) ||
+                        !customer.email ||
+                        !emailRegex.test(customer.email) ||
+                        isEqual(initialCustomer || emptyCustomer, customer)
+                    }
+                    onClick={onSave}
+                >
+                    {initialCustomer ? 'Save' : 'Create Customer'}
+                </Button>
+            </CardActions>
+        </Card>
     );
 };
 

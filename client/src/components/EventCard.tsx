@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import isEqual from 'lodash/isEqual';
 import format from 'date-fns/format';
+import cogoToast from 'cogo-toast';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -46,6 +47,7 @@ const emptyEvent: Event = {
 
 const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
     const [event, setEvent] = useState(initialEvent || emptyEvent);
+    const [isSaving, setIsSaving] = useState(false);
     const {addEvent, updateEvent, deleteEvent} = useStore();
     const classes = useStyles();
 
@@ -54,12 +56,25 @@ const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
     }, [initialEvent]);
 
     const onSave = async () => {
-        if (initialEvent) {
-            await updateEvent(event);
-        } else {
-            event.customerId = customer.id;
-            await addEvent(event);
-            setEvent(emptyEvent);
+        if (isSaving) {
+            return;
+        }
+        setIsSaving(true);
+        const {hide} = cogoToast.loading('Saving event');
+        try {
+            if (initialEvent) {
+                await updateEvent(event);
+            } else {
+                event.customerId = customer.id;
+                await addEvent(event);
+                setEvent(emptyEvent);
+            }
+            cogoToast.success('Event saved successfully', {hideAfter: 15});
+        } catch (e) {
+            cogoToast.error('Failed to save event', {hideAfter: 15});
+        } finally {
+            hide!();
+            setIsSaving(false);
         }
     };
 
@@ -129,7 +144,7 @@ const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
                 )}
                 <Button
                     size="small"
-                    disabled={isEqual(initialEvent, event) || !event.address || event.start >= event.end}
+                    disabled={isSaving || !event.address || event.start >= event.end || isEqual(initialEvent, event)}
                     onClick={onSave}
                 >
                     {initialEvent ? 'Save' : 'Create Event'}

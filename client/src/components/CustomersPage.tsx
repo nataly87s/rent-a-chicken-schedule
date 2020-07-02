@@ -1,18 +1,29 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import {makeStyles} from '@material-ui/core/styles';
 import {useCustomers} from '../context/StoreContext';
 import CustomerCard from './CustomerCard';
 
+const useStyles = makeStyles({
+    box: {
+        padding: '3em',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, auto)',
+        gridAutoColumns: 'auto',
+        gridGap: '8px',
+    },
+});
+
 const CustomersPage = () => {
     const customers = useCustomers();
+    const classes = useStyles();
     return (
-        <Grid container justify="center" spacing={2}>
+        <Box className={classes.box}>
+            <CustomerCard />
             {customers.map((c) => (
-                <Grid key={c.id} item>
-                    <CustomerCard {...c} />
-                </Grid>
+                <CustomerCard key={c.id} customer={c} />
             ))}
-        </Grid>
+        </Box>
     );
 };
 

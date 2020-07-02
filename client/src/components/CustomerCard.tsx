@@ -1,39 +1,119 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import isEqual from 'lodash/isEqual';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import TextField from '@material-ui/core/TextField';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import {Customer} from '../clients/CustomersClient';
+import {useStore} from '../context/StoreContext';
+
+export type CustomerCardProps = {
+    customer?: Customer;
+};
+
+const emptyCustomer: Customer = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    email: '',
+};
 
 const useStyles = makeStyles({
-    pos: {
-        margin: '1em',
+    container: {
+        display: 'grid',
+        gridTemplateRows: 'repeat(3, Auto)',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gridGap: '12px 20px',
+    },
+    textArea: {
+        gridColumnEnd: 'span 2',
     },
 });
 
-const CustomerCard = ({firstName, lastName, phoneNumber, email, notes}: Customer) => {
+const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
+    const [customer, setCustomer] = useState(initialCustomer || emptyCustomer);
+
+    const {addCustomer, updateCustomer} = useStore();
+
+    useEffect(() => setCustomer(initialCustomer || emptyCustomer), [initialCustomer]);
+
     const classes = useStyles();
+
+    const onSave = async () => {
+        if (initialCustomer) {
+            await updateCustomer(customer);
+        } else {
+            await addCustomer(customer);
+            setCustomer(emptyCustomer);
+        }
+    };
 
     return (
         <Card>
             <CardContent>
-                <Typography className={classes.pos} variant="h5" component="h1">
-                    {firstName} {lastName}
-                </Typography>
-                <Typography className={classes.pos} variant="body1" component="p">
-                    {phoneNumber}
-                    <br />
-                    {email}
-                </Typography>
-                <Typography className={classes.pos} variant="body2" component="p">
-                    {notes}
-                </Typography>
+                <div className={classes.container}>
+                    <TextField
+                        label="First Name"
+                        value={customer.firstName}
+                        onChange={(e) => {
+                            const firstName = e.target.value;
+                            setCustomer((c) => ({...c, firstName}));
+                        }}
+                    />
+                    <TextField
+                        label="Last Name"
+                        value={customer.lastName}
+                        onChange={(e) => {
+                            const lastName = e.target.value;
+                            setCustomer((c) => ({...c, lastName}));
+                        }}
+                    />
+                    <TextField
+                        label="Phone Number"
+                        value={customer.phoneNumber}
+                        onChange={(e) => {
+                            const phoneNumber = e.target.value;
+                            setCustomer((c) => ({...c, phoneNumber}));
+                        }}
+                    />
+                    <TextField
+                        label="Email"
+                        value={customer.email}
+                        onChange={(e) => {
+                            const email = e.target.value;
+                            setCustomer((c) => ({...c, email}));
+                        }}
+                    />
+                    <TextareaAutosize
+                        className={classes.textArea}
+                        placeholder="Notes"
+                        rowsMin={5}
+                        rowsMax={5}
+                        value={customer.notes || ''}
+                        onChange={(e) => {
+                            const notes = e.target.value;
+                            setCustomer((c) => ({...c, notes}));
+                        }}
+                    />
+                </div>
             </CardContent>
             <CardActions>
-                <Button size="small">Edit</Button>
-                <Button size="small">Events</Button>
+                <Button size="small" disabled={isEqual(initialCustomer || emptyCustomer, customer)} onClick={onSave}>
+                    {initialCustomer ? 'Save' : 'Create Customer'}
+                </Button>
+                {!initialCustomer && (
+                    <Button
+                        size="small"
+                        disabled={isEqual(emptyCustomer, customer)}
+                        onClick={() => setCustomer(emptyCustomer)}
+                    >
+                        Cancel
+                    </Button>
+                )}
             </CardActions>
         </Card>
     );

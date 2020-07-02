@@ -47,7 +47,7 @@ const EventsPage = ({customerId}: EventsPageProps) => {
     const classes = useStyles();
     const filterByCustomer = customers.find((c) => c.id === customerId);
 
-    let filteredEvents = events.filter(e => e.start >= new Date());
+    let filteredEvents = events.filter(e => isBefore(Date.now(), e.end));
     if (filterByCustomer) {
         filteredEvents = filteredEvents.filter((e) => e.customerId === customerId);
     }

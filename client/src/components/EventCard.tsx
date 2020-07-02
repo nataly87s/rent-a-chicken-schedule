@@ -34,7 +34,6 @@ const useStyles = makeStyles({
 export type EventCardProps = {
     customer: Customer;
     event?: Event;
-    onClose?: () => void;
 };
 
 const emptyEvent: Event = {
@@ -45,7 +44,7 @@ const emptyEvent: Event = {
     end: new Date(),
 };
 
-const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => {
+const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
     const [event, setEvent] = useState(initialEvent || emptyEvent);
     const {addEvent, updateEvent, deleteEvent} = useStore();
     const classes = useStyles();
@@ -61,9 +60,6 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
             event.customerId = customer.id;
             await addEvent(event);
             setEvent(emptyEvent);
-        }
-        if (onClose) {
-            onClose();
         }
     };
 
@@ -126,11 +122,6 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
                 />
             </CardContent>
             <CardActions className={classes.buttons}>
-                {onClose && (
-                    <Button size="small" onClick={onClose}>
-                        Cancel
-                    </Button>
-                )}
                 {initialEvent && (
                     <Button size="small" onClick={() => deleteEvent(initialEvent.id)}>
                         Delete

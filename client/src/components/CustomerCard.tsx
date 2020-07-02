@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -6,11 +7,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import Dialog from '@material-ui/core/Dialog';
 import {makeStyles} from '@material-ui/core/styles';
 import {Customer} from '../clients/CustomersClient';
 import {useStore} from '../context/StoreContext';
-import EventCard from './EventCard';
 
 export type CustomerCardProps = {
     customer?: Customer;
@@ -41,13 +40,11 @@ const useStyles = makeStyles({
 
 const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
     const [customer, setCustomer] = useState(initialCustomer || emptyCustomer);
-    const [addEvent, setAddEvent] = useState(false);
-
     const {addCustomer, updateCustomer} = useStore();
+    const classes = useStyles();
+    const history = useHistory();
 
     useEffect(() => setCustomer(initialCustomer || emptyCustomer), [initialCustomer]);
-
-    const classes = useStyles();
 
     const onSave = async () => {
         if (initialCustomer) {
@@ -113,8 +110,8 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                 <CardActions className={classes.buttons}>
                     {initialCustomer && (
                         <>
-                            <Button size="small" onClick={() => setAddEvent(true)}>
-                                Add Event
+                            <Button size="small" onClick={() => history.push(`/events/${customer.id}`)}>
+                                Events
                             </Button>
                             <Button size="small" onClick={() => updateCustomer({...customer, archived: true})}>
                                 Archive
@@ -145,9 +142,6 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                     </Button>
                 </CardActions>
             </Card>
-            <Dialog open={addEvent} onClose={() => setAddEvent(false)}>
-                <EventCard customer={customer} onClose={() => setAddEvent(false)} />
-            </Dialog>
         </>
     );
 };

@@ -14,15 +14,27 @@ const useStyles = makeStyles({
     },
 });
 
-const EventsPage = () => {
+export type EventsPageProps = {
+    customerId?: number;
+};
+
+const EventsPage = ({customerId}: EventsPageProps) => {
     const {events, customers} = useStore();
     const classes = useStyles();
-
+    const filterByCustomer = typeof customerId === 'number';
     return (
         <Box className={classes.box}>
-            {events.map((event) => (
-                <EventCard key={event.id} event={event} customer={customers.find((c) => c.id === event.customerId)!} />
-            ))}
+            {filterByCustomer && <EventCard customer={customers.find((c) => c.id === customerId)!} />}
+
+            {events
+                .filter((e) => !filterByCustomer || customerId == e.customerId)
+                .map((event) => (
+                    <EventCard
+                        key={event.id}
+                        event={event}
+                        customer={customers.find((c) => c.id === event.customerId)!}
+                    />
+                ))}
         </Box>
     );
 };

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     cards: {
         marginTop: '2em',
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, auto)',
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gridAutoColumns: 'auto',
         gridGap: '8px',
     },

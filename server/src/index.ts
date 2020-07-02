@@ -28,6 +28,8 @@ passport.use(
     }),
 );
 
+app.use(passport.authenticate('basic', {session: false}));
+
 app.use('/api', api());
 
 if (process.env.NODE_ENV === 'production') {

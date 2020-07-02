@@ -14,6 +14,7 @@ export type Store = {
     events: Event[];
     addEvent: (event: Omit<Event, 'id'>) => Promise<void>;
     updateEvent: (event: Event) => Promise<void>;
+    deleteEvent: (id: number) => Promise<void>;
 };
 
 const StoreContext = createContext<Store>({
@@ -23,6 +24,7 @@ const StoreContext = createContext<Store>({
     events: [],
     addEvent: () => Promise.reject(new Error('missing StoreProvider')),
     updateEvent: () => Promise.reject(new Error('missing StoreProvider')),
+    deleteEvent: () => Promise.reject(new Error('missing StoreProvider')),
 });
 
 export const useStore = () => useContext(StoreContext);
@@ -54,26 +56,25 @@ export const StoreProvider: FunctionComponent = ({children}) => {
         });
     }, []);
 
-    const addEvent = useCallback(
-        async (event: Omit<Event, 'id'>) => {
-            const newEvent = await eventsClient.put(event);
-            setEvents((events) => events!.concat(fixEventDates(newEvent)));
-        },
-        [],
-    );
+    const addEvent = useCallback(async (event: Omit<Event, 'id'>) => {
+        const newEvent = await eventsClient.put(event);
+        setEvents((events) => events!.concat(fixEventDates(newEvent)));
+    }, []);
 
-    const updateEvent = useCallback(
-        async (event: Event) => {
-            const updatedEvent = await eventsClient.post(event);
-            setEvents((events) => {
-                const index = events!.findIndex((i) => i.id === updatedEvent.id);
-                const updatedEvents = [...events!];
-                updatedEvents![index] = fixEventDates(updatedEvent);
-                return updatedEvents;
-            });
-        },
-        [],
-    );
+    const updateEvent = useCallback(async (event: Event) => {
+        const updatedEvent = await eventsClient.post(event);
+        setEvents((events) => {
+            const index = events!.findIndex((i) => i.id === updatedEvent.id);
+            const updatedEvents = [...events!];
+            updatedEvents![index] = fixEventDates(updatedEvent);
+            return updatedEvents;
+        });
+    }, []);
+
+    const deleteEvent = useCallback(async (id: number) => {
+        await eventsClient.delete(id);
+        setEvents((events) => events?.filter((e) => e.id !== id));
+    }, []);
 
     useEffect(() => {
         (async () => {
@@ -97,7 +98,9 @@ export const StoreProvider: FunctionComponent = ({children}) => {
     }
 
     return (
-        <StoreContext.Provider value={{customers, addCustomer, updateCustomer, events, addEvent, updateEvent}}>
+        <StoreContext.Provider
+            value={{customers, addCustomer, updateCustomer, events, addEvent, updateEvent, deleteEvent}}
+        >
             {children}
         </StoreContext.Provider>
     );

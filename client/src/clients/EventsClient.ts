@@ -12,4 +12,14 @@ export default class EventsClient extends ApiClient<Event> {
     constructor() {
         super('event');
     }
+
+    delete = async (id: number) => {
+        const response = await fetch(`/api/event/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`failed updating event`);
+        }
+    };
 }

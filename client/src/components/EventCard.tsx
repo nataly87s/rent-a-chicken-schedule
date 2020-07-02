@@ -47,7 +47,7 @@ const emptyEvent: Event = {
 
 const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => {
     const [event, setEvent] = useState(initialEvent || emptyEvent);
-    const {addEvent, updateEvent} = useStore();
+    const {addEvent, updateEvent, deleteEvent} = useStore();
     const classes = useStyles();
 
     useEffect(() => {
@@ -116,6 +116,11 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
                 {onClose && (
                     <Button size="small" onClick={onClose}>
                         Cancel
+                    </Button>
+                )}
+                {initialEvent && (
+                    <Button size="small" onClick={() => deleteEvent(initialEvent.id)}>
+                        Delete
                     </Button>
                 )}
                 <Button size="small" disabled={isEqual(initialEvent, event)} onClick={onSave}>

@@ -6,10 +6,10 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {useStore} from '../context/StoreContext';
 import EventCard from './EventCard';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     box: {
@@ -47,7 +47,7 @@ const EventsPage = ({customerId}: EventsPageProps) => {
     const classes = useStyles();
     const filterByCustomer = customers.find((c) => c.id === customerId);
 
-    let filteredEvents = events;
+    let filteredEvents = events.filter(e => e.start >= new Date());
     if (filterByCustomer) {
         filteredEvents = filteredEvents.filter((e) => e.customerId === customerId);
     }

@@ -6,9 +6,11 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Dialog from '@material-ui/core/Dialog';
 import {makeStyles} from '@material-ui/core/styles';
 import {Customer} from '../clients/CustomersClient';
 import {useStore} from '../context/StoreContext';
+import EventCard from './EventCard';
 
 export type CustomerCardProps = {
     customer?: Customer;
@@ -25,17 +27,21 @@ const emptyCustomer: Customer = {
 const useStyles = makeStyles({
     container: {
         display: 'grid',
-        gridTemplateRows: 'repeat(3, Auto)',
         gridTemplateColumns: 'repeat(2, 1fr)',
+        gridTemplateRows: 'auto',
         gridGap: '12px 20px',
     },
     textArea: {
         gridColumnEnd: 'span 2',
     },
+    buttons: {
+        justifyContent: 'flex-end',
+    },
 });
 
 const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
     const [customer, setCustomer] = useState(initialCustomer || emptyCustomer);
+    const [addEvent, setAddEvent] = useState(false);
 
     const {addCustomer, updateCustomer} = useStore();
 
@@ -53,9 +59,9 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
     };
 
     return (
-        <Card>
-            <CardContent>
-                <div className={classes.container}>
+        <>
+            <Card>
+                <CardContent className={classes.container}>
                     <TextField
                         label="First Name"
                         value={customer.firstName}
@@ -99,23 +105,34 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             setCustomer((c) => ({...c, notes}));
                         }}
                     />
-                </div>
-            </CardContent>
-            <CardActions>
-                <Button size="small" disabled={isEqual(initialCustomer || emptyCustomer, customer)} onClick={onSave}>
-                    {initialCustomer ? 'Save' : 'Create Customer'}
-                </Button>
-                {!initialCustomer && (
+                </CardContent>
+                <CardActions className={classes.buttons}>
+                    {initialCustomer ? (
+                        <Button size="small" onClick={() => setAddEvent(true)}>
+                            Add Event
+                        </Button>
+                    ) : (
+                        <Button
+                            size="small"
+                            disabled={isEqual(emptyCustomer, customer)}
+                            onClick={() => setCustomer(emptyCustomer)}
+                        >
+                            Cancel
+                        </Button>
+                    )}
                     <Button
                         size="small"
-                        disabled={isEqual(emptyCustomer, customer)}
-                        onClick={() => setCustomer(emptyCustomer)}
+                        disabled={isEqual(initialCustomer || emptyCustomer, customer)}
+                        onClick={onSave}
                     >
-                        Cancel
+                        {initialCustomer ? 'Save' : 'Create Customer'}
                     </Button>
-                )}
-            </CardActions>
-        </Card>
+                </CardActions>
+            </Card>
+            <Dialog open={addEvent} onClose={() => setAddEvent(false)}>
+                <EventCard customer={customer} onClose={() => setAddEvent(false)} />
+            </Dialog>
+        </>
     );
 };
 

@@ -1,20 +1,29 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import {useEvents} from '../context/StoreContext';
+import Box from '@material-ui/core/Box';
+import {makeStyles} from '@material-ui/core/styles';
+import {useStore} from '../context/StoreContext';
 import EventCard from './EventCard';
 
+const useStyles = makeStyles({
+    box: {
+        padding: '3em',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gridAutoColumns: 'auto',
+        gridGap: '8px',
+    },
+});
+
 const EventsPage = () => {
-    const events = useEvents();
+    const {events, customers} = useStore();
+    const classes = useStyles();
+
     return (
-        <>
-            <Grid container justify="center" spacing={2}>
-                {events.map((e) => (
-                    <Grid key={e.id} item>
-                        <EventCard {...e} />
-                    </Grid>
-                ))}
-            </Grid>
-        </>
+        <Box className={classes.box}>
+            {events.map((event) => (
+                <EventCard key={event.id} event={event} customer={customers.find((c) => c.id === event.customerId)!} />
+            ))}
+        </Box>
     );
 };
 

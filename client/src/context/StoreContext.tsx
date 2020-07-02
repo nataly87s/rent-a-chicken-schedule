@@ -6,16 +6,12 @@ import CustomersClient, {Customer} from '../clients/CustomersClient';
 const customersClient = new CustomersClient();
 const eventsClient = new EventsClient();
 
-export type EventWithCustomer = Event & {
-    customer: Customer;
-};
-
 export type Store = {
     customers: Customer[];
     addCustomer: (customer: Omit<Customer, 'id'>) => Promise<void>;
     updateCustomer: (customer: Customer) => Promise<void>;
 
-    events: EventWithCustomer[];
+    events: Event[];
     addEvent: (event: Omit<Event, 'id'>) => Promise<void>;
     updateEvent: (event: Event) => Promise<void>;
 };
@@ -33,9 +29,15 @@ export const useStore = () => useContext(StoreContext);
 export const useCustomers = () => useContext(StoreContext).customers;
 export const useEvents = () => useContext(StoreContext).events;
 
+const fixEventDates = ({start, end, ...event}: Event) => ({
+    ...event,
+    start: new Date(start),
+    end: new Date(end),
+});
+
 export const StoreProvider: FunctionComponent = ({children}) => {
     const [customers, setCustomers] = useState<Customer[]>();
-    const [events, setEvents] = useState<EventWithCustomer[]>();
+    const [events, setEvents] = useState<Event[]>();
 
     const addCustomer = useCallback(async (customer: Omit<Customer, 'id'>) => {
         const newCustomer = await customersClient.put(customer);
@@ -55,24 +57,22 @@ export const StoreProvider: FunctionComponent = ({children}) => {
     const addEvent = useCallback(
         async (event: Omit<Event, 'id'>) => {
             const newEvent = await eventsClient.put(event);
-            const customer = customers!.find((c) => c.id === newEvent.customerId)!;
-            setEvents((events) => events!.concat({...newEvent, customer}));
+            setEvents((events) => events!.concat(fixEventDates(newEvent)));
         },
-        [customers],
+        [],
     );
 
     const updateEvent = useCallback(
         async (event: Event) => {
             const updatedEvent = await eventsClient.post(event);
-            const customer = customers!.find((c) => c.id === updatedEvent.customerId)!;
             setEvents((events) => {
                 const index = events!.findIndex((i) => i.id === updatedEvent.id);
                 const updatedEvents = [...events!];
-                updatedEvents![index] = {...updatedEvent, customer};
+                updatedEvents![index] = fixEventDates(updatedEvent);
                 return updatedEvents;
             });
         },
-        [customers],
+        [],
     );
 
     useEffect(() => {
@@ -83,7 +83,7 @@ export const StoreProvider: FunctionComponent = ({children}) => {
                 setEvents(
                     events.map((event) => {
                         const customer = customers.find((c) => c.id === event.customerId)!;
-                        return {...event, customer};
+                        return {...fixEventDates(event), customer};
                     }),
                 );
             } catch (e) {

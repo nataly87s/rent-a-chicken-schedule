@@ -1,7 +1,11 @@
 import React from 'react';
 
-const ReportsPage = () => {
-    return <>reports page</>
-}
+export type ReportsPageProps = {
+    customerId?: number;
+};
+
+const ReportsPage = ({customerId}: ReportsPageProps) => {
+    return <>reports page {customerId}</>;
+};
 
 export default ReportsPage;

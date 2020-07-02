@@ -110,6 +110,9 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                 <CardActions className={classes.buttons}>
                     {initialCustomer && (
                         <>
+                            <Button size="small" onClick={() => history.push(`/reports/${customer.id}`)}>
+                                Report
+                            </Button>
                             <Button size="small" onClick={() => history.push(`/events/${customer.id}`)}>
                                 Events
                             </Button>

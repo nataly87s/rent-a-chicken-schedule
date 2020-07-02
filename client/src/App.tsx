@@ -47,7 +47,16 @@ const App = () => (
                             <EventsPage customerId={customerId ? Number(customerId) : undefined} />
                         )}
                     />
-                    <Route path="/reports" render={() => <ReportsPage />} />
+                    <Route
+                        path="/reports/:customerId?"
+                        render={({
+                            match: {
+                                params: {customerId},
+                            },
+                        }: RouteComponentProps<{customerId?: string}>) => (
+                            <ReportsPage customerId={customerId ? Number(customerId) : undefined} />
+                        )}
+                    />
                     <Route render={() => <Redirect to="/customers" />} />
                 </Switch>
             </StoreProvider>

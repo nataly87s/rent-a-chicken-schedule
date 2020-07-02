@@ -31,7 +31,7 @@ const filterCustomer = (customer: Customer, search: string) => {
         return true;
     }
     const words = search.toLowerCase().split(' ').filter(Boolean);
-    return words.some(
+    return words.every(
         (word) => customer.firstName.toLowerCase().includes(word) || customer.lastName.toLowerCase().includes(word),
     );
 };

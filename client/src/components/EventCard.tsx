@@ -85,6 +85,7 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={event.start >= event.end}
                 />
 
                 <TextField
@@ -98,6 +99,18 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={event.start >= event.end}
+                />
+
+                <TextField
+                    className={classes.textArea}
+                    label="Address"
+                    value={event.address}
+                    onChange={(e) => {
+                        const address = e.target.value;
+                        setEvent((e) => ({...e, address}));
+                    }}
+                    error={!event.address}
                 />
 
                 <TextareaAutosize
@@ -123,7 +136,11 @@ const EventCard = ({event: initialEvent, customer, onClose}: EventCardProps) => 
                         Delete
                     </Button>
                 )}
-                <Button size="small" disabled={isEqual(initialEvent, event)} onClick={onSave}>
+                <Button
+                    size="small"
+                    disabled={isEqual(initialEvent, event) || !event.address || event.start >= event.end}
+                    onClick={onSave}
+                >
                     {initialEvent ? 'Save' : 'Create Event'}
                 </Button>
             </CardActions>

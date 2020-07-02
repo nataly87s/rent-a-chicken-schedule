@@ -69,6 +69,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             const firstName = e.target.value;
                             setCustomer((c) => ({...c, firstName}));
                         }}
+                        error={!customer.firstName}
                     />
                     <TextField
                         label="Last Name"
@@ -77,6 +78,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             const lastName = e.target.value;
                             setCustomer((c) => ({...c, lastName}));
                         }}
+                        error={!customer.lastName}
                     />
                     <TextField
                         label="Phone Number"
@@ -85,6 +87,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             const phoneNumber = e.target.value;
                             setCustomer((c) => ({...c, phoneNumber}));
                         }}
+                        error={!customer.phoneNumber}
                     />
                     <TextField
                         label="Email"
@@ -93,6 +96,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             const email = e.target.value;
                             setCustomer((c) => ({...c, email}));
                         }}
+                        error={!customer.email}
                     />
                     <TextareaAutosize
                         className={classes.textArea}
@@ -128,7 +132,13 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                     )}
                     <Button
                         size="small"
-                        disabled={isEqual(initialCustomer || emptyCustomer, customer)}
+                        disabled={
+                            isEqual(initialCustomer || emptyCustomer, customer) ||
+                            !customer.firstName ||
+                            !customer.lastName ||
+                            !customer.phoneNumber ||
+                            !customer.email
+                        }
                         onClick={onSave}
                     >
                         {initialCustomer ? 'Save' : 'Create Customer'}

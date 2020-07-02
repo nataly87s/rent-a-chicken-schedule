@@ -65,6 +65,11 @@ const initialize = (sequelize: Sequelize) => {
                 allowNull: false,
                 type: DataTypes.DATE,
             },
+            archived: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {tableName: 'Customers', sequelize},
     );

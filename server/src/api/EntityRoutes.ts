@@ -53,8 +53,8 @@ export default class EntityRoutes<T extends ModelAttributes> {
         try {
             const body = req.body as T;
             body.updatedAt = new Date();
-            const model = await this.model.update(body, {where: {id}});
-            res.send(model);
+            await this.model.update(body, {where: {id}});
+            res.sendStatus(200);
         } catch (err) {
             console.error(`failed updating ${this.modelName} with id ${id}`, req.body, err);
             res.sendStatus(500);

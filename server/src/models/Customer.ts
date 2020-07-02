@@ -7,6 +7,7 @@ export interface CustomerAttributes extends ModelAttributes {
     phoneNumber: string;
     email: string;
     notes: string | null;
+    archived: boolean;
 }
 
 export default class Customer extends Model<CustomerAttributes, ModelCreationAttributes<CustomerAttributes>>
@@ -19,4 +20,5 @@ export default class Customer extends Model<CustomerAttributes, ModelCreationAtt
     notes!: string | null;
     createdAt!: Date;
     updatedAt!: Date;
+    archived!: boolean;
 }

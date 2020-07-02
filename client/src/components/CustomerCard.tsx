@@ -107,11 +107,17 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                     />
                 </CardContent>
                 <CardActions className={classes.buttons}>
-                    {initialCustomer ? (
-                        <Button size="small" onClick={() => setAddEvent(true)}>
-                            Add Event
-                        </Button>
-                    ) : (
+                    {initialCustomer && (
+                        <>
+                            <Button size="small" onClick={() => setAddEvent(true)}>
+                                Add Event
+                            </Button>
+                            <Button size="small" onClick={() => updateCustomer({...customer, archived: true})}>
+                                Archive
+                            </Button>
+                        </>
+                    )}
+                    {!initialCustomer && (
                         <Button
                             size="small"
                             disabled={isEqual(emptyCustomer, customer)}

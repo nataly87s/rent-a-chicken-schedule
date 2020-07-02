@@ -38,7 +38,7 @@ export default class ApiClient<T extends Entity> {
         return await response.json();
     };
 
-    post = async (entity: T): Promise<T> => {
+    post = async (entity: T): Promise<void> => {
         const response = await fetch(`/api/${this.entityName}/${entity.id}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -48,7 +48,5 @@ export default class ApiClient<T extends Entity> {
         if (!response.ok) {
             throw new Error(`failed updating ${this.entityName}`);
         }
-
-        return await response.json();
     };
 }

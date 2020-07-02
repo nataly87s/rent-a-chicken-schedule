@@ -6,6 +6,7 @@ export type Customer = Entity & {
     phoneNumber: string;
     email: string;
     notes?: string;
+    archived?: boolean;
 };
 
 export default class CustomersClient extends ApiClient<Customer> {

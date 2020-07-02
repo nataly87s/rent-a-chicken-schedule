@@ -20,9 +20,11 @@ const CustomersPage = () => {
     return (
         <Box className={classes.box}>
             <CustomerCard />
-            {customers.map((c) => (
-                <CustomerCard key={c.id} customer={c} />
-            ))}
+            {customers
+                .filter((c) => !c.archived)
+                .map((c) => (
+                    <CustomerCard key={c.id} customer={c} />
+                ))}
         </Box>
     );
 };

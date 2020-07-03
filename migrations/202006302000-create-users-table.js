@@ -18,6 +18,11 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            archived: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
@@ -29,6 +34,7 @@ module.exports = {
         });
 
         await queryInterface.bulkInsert('Users', [
+            {userName: 'test', password: 'test', createdAt: new Date(), updatedAt: new Date()},
             {userName: 'emp1', password: 'P@ssw0rd', createdAt: new Date(), updatedAt: new Date()},
         ]);
     },

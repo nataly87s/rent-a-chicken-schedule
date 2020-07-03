@@ -18,11 +18,6 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
-            archived: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false,
-                defaultValue: false,
-            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

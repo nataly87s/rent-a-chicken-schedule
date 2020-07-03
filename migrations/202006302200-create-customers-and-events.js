@@ -26,6 +26,11 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             notes: Sequelize.STRING,
+            archived: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

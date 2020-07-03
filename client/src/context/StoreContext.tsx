@@ -1,4 +1,5 @@
 import React, {createContext, FunctionComponent, useCallback, useContext, useEffect, useState} from 'react';
+import orderBy from 'lodash/orderBy';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EventsClient, {Event} from '../clients/EventsClient';
 import CustomersClient, {Customer} from '../clients/CustomersClient';
@@ -44,7 +45,7 @@ export const StoreProvider: FunctionComponent = ({children}) => {
 
     const addCustomer = useCallback(async (customer: Omit<Customer, 'id'>) => {
         const newCustomer = await customersClient.post(customer);
-        setCustomers((customers) => customers!.concat(newCustomer));
+        setCustomers((customers) => orderBy(customers!.concat(newCustomer), ['lastName', 'firstName']));
     }, []);
 
     const updateCustomer = useCallback(async (customer) => {
@@ -59,7 +60,7 @@ export const StoreProvider: FunctionComponent = ({children}) => {
 
     const addEvent = useCallback(async (event: Omit<Event, 'id'>) => {
         const newEvent = await eventsClient.post(event);
-        setEvents((events) => events!.concat(fixEventDates(newEvent)));
+        setEvents((events) => orderBy(events!.concat(fixEventDates(newEvent)), ['start', 'end']));
     }, []);
 
     const updateEvent = useCallback(async (event: Event) => {
@@ -81,13 +82,8 @@ export const StoreProvider: FunctionComponent = ({children}) => {
         (async () => {
             try {
                 const [customers, events] = await Promise.all([customersClient.getAll(), eventsClient.getAll()]);
-                setCustomers(customers);
-                setEvents(
-                    events.map((event) => {
-                        const customer = customers.find((c) => c.id === event.customerId)!;
-                        return {...fixEventDates(event), customer};
-                    }),
-                );
+                setCustomers(orderBy(customers, ['lastName', 'firstName']));
+                setEvents(orderBy(events.map(fixEventDates), ['start', 'end']));
             } catch (e) {
                 cogoToast.error('Failed loading schedule', {hideAfter: 0});
                 console.error('failed loading store', e);

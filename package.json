@@ -12,13 +12,16 @@
         "server"
     ],
     "scripts": {
-        "build": "lerna run --parallel build",
-        "start": "node ./server/build/src/index.js"
+        "build": "run-p build:*",
+        "build:db": "sequelize db:migrate",
+        "build:app": "lerna run --parallel build",
+        "start": "node ./server/build/index.js"
     },
     "devDependencies": {
         "husky": "^4.2.5",
         "lerna": "^3.22.1",
         "lint-staged": "^10.2.11",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.0.5",
         "sequelize-cli": "^6.1.0"
     }

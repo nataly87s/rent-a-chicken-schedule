@@ -1,6 +1,6 @@
 import {Options, Sequelize} from 'sequelize';
 import initialize from './initialize';
-import config from '../../config/config.json';
+import config from '../config/config.json';
 
 export * from './types';
 

@@ -15,6 +15,7 @@ const initialize = (sequelize: Sequelize) => {
             userName: {
                 allowNull: false,
                 type: DataTypes.STRING,
+                unique: true
             },
             password: {
                 allowNull: false,

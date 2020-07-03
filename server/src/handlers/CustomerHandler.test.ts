@@ -26,7 +26,7 @@ describe('CustomerHandler', () => {
     });
 
     describe('getAll', () => {
-        test('should return all customers', async () => {
+        test('should return 200 and all customers', async () => {
             //setup
             const expectedResult = [
                 {id: 1, firstName: 'winnie', lastName: 'pooh'},

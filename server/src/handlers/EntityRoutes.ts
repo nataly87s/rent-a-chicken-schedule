@@ -23,7 +23,6 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
             const result = await this.service.getAll();
             res.send(result);
         } catch (err) {
-            console.error(`failed getting all`, err);
             res.status(500).send(err.message);
         }
     };
@@ -38,7 +37,6 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
             }
             res.send(model);
         } catch (err) {
-            console.error(`failed getting`, err);
             res.status(500).send(err.message);
         }
     };
@@ -54,7 +52,6 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
             const model = await this.service.insert(value);
             res.send(model);
         } catch (err) {
-            console.error(`failed creating`, req.body, err);
             res.status(500).send(err.message);
         }
     };
@@ -72,7 +69,6 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
             await this.service.update(value.id, value);
             res.sendStatus(200);
         } catch (err) {
-            console.error(`failed updating`, req.body, err);
             res.status(500).send(err.message);
         }
     };

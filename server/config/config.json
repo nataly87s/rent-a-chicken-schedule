@@ -1,9 +1,9 @@
 {
     "development": {
-        "username": "qfmpacwcblreks",
-        "password": "90403db5a8f3b399bc6a1b4fafc918074f805dc97d4866691167837e2c67ab2e",
-        "database": "dd8kg808cqktgb",
-        "host": "ec2-34-192-173-173.compute-1.amazonaws.com",
+        "username": "fitxqehbynmefw",
+        "password": "503c651435ef494fb37efe8c99188a565c00e6291260afbed0980a5b93cb9ca5",
+        "database": "dbrhka8d1e5u8q",
+        "host": "ec2-52-202-22-140.compute-1.amazonaws.com",
         "dialect": "postgres",
         "dialectOptions": {
             "ssl": {

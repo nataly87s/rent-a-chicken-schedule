@@ -28,8 +28,7 @@ module.exports = {
         });
 
         await queryInterface.bulkInsert('Users', [
-            {userName: 'test', password: 'test', createdAt: new Date(), updatedAt: new Date()},
-            {userName: 'admin', password: 'admin', createdAt: new Date(), updatedAt: new Date()},
+            {userName: 'emp1', password: 'P@ssw0rd', createdAt: new Date(), updatedAt: new Date()}
         ]);
     },
     down: (queryInterface, Sequelize) => {

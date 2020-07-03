@@ -13,7 +13,7 @@
     ],
     "scripts": {
         "build": "lerna run --parallel build",
-        "start": "node ./server/build/index.js"
+        "start": "node ./server/build/src/index.js"
     },
     "devDependencies": {
         "husky": "^4.2.5",

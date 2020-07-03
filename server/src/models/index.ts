@@ -1,13 +1,11 @@
-import {Sequelize} from 'sequelize';
+import {Options, Sequelize} from 'sequelize';
 import initialize from './initialize';
+import config from '../../config/config.json';
+
 export * from './types';
 
-export const sequelize = new Sequelize(process.env.DATABASE_URL!, {
-    dialectOptions: {
-        ssl: {
-            rejectUnauthorized: false,
-        },
-    },
-});
+const sequelizeConfig = process.env.NODE_ENV === 'production' ? config.production : config.development;
+
+export const sequelize = new Sequelize(sequelizeConfig as Options);
 
 initialize(sequelize);

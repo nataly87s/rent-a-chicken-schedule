@@ -78,6 +78,7 @@ const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
             cogoToast.success('Event saved successfully', {hideAfter: 15});
         } catch (e) {
             cogoToast.error('Failed to save event', {hideAfter: 15});
+            console.error('Failed to save event', e);
         } finally {
             hide!();
             setIsSaving(false);
@@ -96,6 +97,7 @@ const EventCard = ({event: initialEvent, customer}: EventCardProps) => {
             cogoToast.success('Event deleted', {hideAfter: 15});
         } catch (e) {
             cogoToast.error('Failed deleting event', {hideAfter: 15});
+            console.error('Failed deleting event', e);
         } finally {
             setIsSaving(false);
             hide!();

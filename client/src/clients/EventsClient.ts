@@ -19,7 +19,8 @@ export default class EventsClient extends ApiClient<Event> {
         });
 
         if (!response.ok) {
-            throw new Error(`failed updating event`);
+            const message = await response.text()
+            throw new Error(message);
         }
     };
 }

@@ -43,12 +43,12 @@ export const StoreProvider: FunctionComponent = ({children}) => {
     const [events, setEvents] = useState<Event[]>();
 
     const addCustomer = useCallback(async (customer: Omit<Customer, 'id'>) => {
-        const newCustomer = await customersClient.put(customer);
+        const newCustomer = await customersClient.post(customer);
         setCustomers((customers) => customers!.concat(newCustomer));
     }, []);
 
     const updateCustomer = useCallback(async (customer) => {
-        await customersClient.post(customer);
+        await customersClient.put(customer);
         setCustomers((customers) => {
             const index = customers!.findIndex((i) => i.id === customer.id);
             const updatedCustomers = [...customers!];
@@ -58,12 +58,12 @@ export const StoreProvider: FunctionComponent = ({children}) => {
     }, []);
 
     const addEvent = useCallback(async (event: Omit<Event, 'id'>) => {
-        const newEvent = await eventsClient.put(event);
+        const newEvent = await eventsClient.post(event);
         setEvents((events) => events!.concat(fixEventDates(newEvent)));
     }, []);
 
     const updateEvent = useCallback(async (event: Event) => {
-        await eventsClient.post(event);
+        await eventsClient.put(event);
         setEvents((events) => {
             const index = events!.findIndex((i) => i.id === event.id);
             const updatedEvents = [...events!];

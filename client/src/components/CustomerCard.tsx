@@ -73,6 +73,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
             cogoToast.success('Customer saved successfully', {hideAfter: 15});
         } catch (e) {
             cogoToast.error('Failed to save customer', {hideAfter: 15});
+            console.error('Failed to save customer', e);
         } finally {
             setIsSaving(false);
             hide!();
@@ -91,6 +92,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
             cogoToast.success('Customer archived', {hideAfter: 15});
         } catch (e) {
             cogoToast.error('Failed archiving customer', {hideAfter: 15});
+            console.error('Failed archiving customer', e);
         } finally {
             setIsSaving(false);
             hide!();

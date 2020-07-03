@@ -5,7 +5,7 @@ import passport from 'passport';
 import {BasicStrategy} from 'passport-http';
 import dotenv from 'dotenv';
 dotenv.config();
-import api from './api';
+import api from './handlers';
 import User from './models/User';
 
 const port = process.env.PORT || 5000;

@@ -44,7 +44,9 @@ const useStyles = makeStyles({
     },
 });
 
+// eslint-disable-next-line no-useless-escape
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+// eslint-disable-next-line no-useless-escape
 const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
 const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
@@ -72,7 +74,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
             }
             cogoToast.success('Customer saved successfully', {hideAfter: 15});
         } catch (e) {
-            cogoToast.error('Failed to save customer', {hideAfter: 15});
+            cogoToast.error(e.message, {hideAfter: 15, heading: 'Failed to save customer'});
             console.error('Failed to save customer', e);
         } finally {
             setIsSaving(false);
@@ -91,7 +93,7 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
             await updateCustomer({...customer, archived: true});
             cogoToast.success('Customer archived', {hideAfter: 15});
         } catch (e) {
-            cogoToast.error('Failed archiving customer', {hideAfter: 15});
+            cogoToast.error(e.message, {hideAfter: 15, heading: 'Failed archiving customer'});
             console.error('Failed archiving customer', e);
         } finally {
             setIsSaving(false);

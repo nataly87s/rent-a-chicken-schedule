@@ -85,7 +85,7 @@ export const StoreProvider: FunctionComponent = ({children}) => {
                 setCustomers(orderBy(customers, ['lastName', 'firstName']));
                 setEvents(orderBy(events.map(fixEventDates), ['start', 'end']));
             } catch (e) {
-                cogoToast.error('Failed loading schedule', {hideAfter: 0});
+                cogoToast.error(e.message, {hideAfter: 0, heading: 'Failed loading schedule'});
                 console.error('failed loading store', e);
             }
         })();

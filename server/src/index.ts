@@ -5,7 +5,7 @@ import passport from 'passport';
 import {BasicStrategy} from 'passport-http';
 import dotenv from 'dotenv';
 dotenv.config();
-import api from './handlers';
+import handlers from './handlers';
 import User from './models/User';
 
 const port = process.env.PORT || 5000;
@@ -30,7 +30,7 @@ passport.use(
 
 app.use(passport.authenticate('basic', {session: false}));
 
-app.use('/api', api());
+app.use('/api', handlers());
 
 if (process.env.NODE_ENV === 'production') {
     // Serve any static files

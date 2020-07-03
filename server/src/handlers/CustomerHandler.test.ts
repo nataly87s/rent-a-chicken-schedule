@@ -1,4 +1,4 @@
-import CustomerRoutes from './CustomerRoutes';
+import CustomerHandler from './CustomerHandler';
 import httpMocks from 'node-mocks-http';
 const getAllMock = jest.fn();
 const getMock = jest.fn();
@@ -14,15 +14,15 @@ jest.mock('../services/CustomerService', () =>
     })),
 );
 
-describe('CustomerRoutes', () => {
-    let handler: CustomerRoutes;
+describe('CustomerHandler', () => {
+    let handler: CustomerHandler;
 
     beforeEach(() => {
         getAllMock.mockClear();
         getMock.mockClear();
         insertMock.mockClear();
         updateMock.mockClear();
-        handler = new CustomerRoutes();
+        handler = new CustomerHandler();
     });
 
     describe('getAll', () => {

@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import Joi from '@hapi/joi';
 import {EventAttributes} from '../models/Event';
 import EventService from '../services/EventService';
-import EntityRoutes from './EntityRoutes';
+import EntityHandler from './EntityHandler';
 
 const eventSchema = Joi.object({
     customerId: Joi.number().required(),
@@ -12,12 +12,12 @@ const eventSchema = Joi.object({
     notes: [Joi.string(), Joi.allow(null)],
 });
 
-export default class EventRoutes extends EntityRoutes<EventAttributes, EventService> {
+export default class EventHandler extends EntityHandler<EventAttributes, EventService> {
     constructor() {
         super(EventService, eventSchema);
     }
 
-    delete = async (req: Request, res: Response) => {
+    async delete(req: Request, res: Response) {
         const id = req.params.id;
         try {
             await this.service.delete(Number(id));
@@ -26,11 +26,11 @@ export default class EventRoutes extends EntityRoutes<EventAttributes, EventServ
             console.error(`failed deleting Event with id ${id}`, req.body, err);
             res.sendStatus(500);
         }
-    };
+    }
 
-    router() {
-        const router = super.router();
-        router.delete('/:id', this.delete);
+    getRouter() {
+        const router = super.getRouter();
+        router.delete('/:id', this.delete.bind(this));
         return router;
     }
 }

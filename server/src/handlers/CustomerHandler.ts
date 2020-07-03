@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import {CustomerAttributes} from '../models/Customer';
 import CustomerService from '../services/CustomerService';
-import EntityRoutes from './EntityRoutes';
+import EntityHandler from './EntityHandler';
 
 const customerSchema = Joi.object({
     firstName: Joi.string().required(),
@@ -12,7 +12,7 @@ const customerSchema = Joi.object({
     archived: Joi.bool()
 })
 
-export default class CustomerRoutes extends EntityRoutes<CustomerAttributes, CustomerService> {
+export default class CustomerHandler extends EntityHandler<CustomerAttributes, CustomerService> {
     constructor() {
         super(CustomerService, customerSchema);
     }

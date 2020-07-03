@@ -3,7 +3,7 @@ import Joi from '@hapi/joi';
 import {ModelAttributes, ModelCreationAttributes} from '../models';
 import ModelService from '../services/ModelService';
 
-export default class EntityRoutes<T extends ModelAttributes, U extends ModelService<T>> {
+export default class EntityHandler<T extends ModelAttributes, U extends ModelService<T>> {
     private readonly _service: U;
 
     constructor(factory: new () => U, private readonly _schema: Joi.ObjectSchema<ModelCreationAttributes<T>>) {
@@ -18,16 +18,16 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
         return this._schema;
     }
 
-    getAll = async (req: Request, res: Response) => {
+    async getAll(req: Request, res: Response) {
         try {
             const result = await this.service.getAll();
             res.send(result);
         } catch (err) {
             res.status(500).send(err.message);
         }
-    };
+    }
 
-    get = async (req: Request, res: Response) => {
+    async get(req: Request, res: Response) {
         const id = req.params.id;
         try {
             const model = await this.service.get(Number(id));
@@ -39,9 +39,9 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
         } catch (err) {
             res.status(500).send(err.message);
         }
-    };
+    }
 
-    post = async (req: Request, res: Response) => {
+    async post(req: Request, res: Response) {
         const {value, error} = this.schema.validate(req.body, {allowUnknown: true});
         if (error) {
             res.status(400).send(error.message);
@@ -54,9 +54,9 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
         } catch (err) {
             res.status(500).send(err.message);
         }
-    };
+    }
 
-    put = async (req: Request, res: Response) => {
+    async put(req: Request, res: Response) {
         const {value, error} = this.schema
             .append({id: Joi.number()})
             .validate({...req.body, id: req.params.id}, {allowUnknown: true});
@@ -71,14 +71,14 @@ export default class EntityRoutes<T extends ModelAttributes, U extends ModelServ
         } catch (err) {
             res.status(500).send(err.message);
         }
-    };
+    }
 
-    router() {
+    getRouter() {
         const router = Router();
-        router.get('/', this.getAll);
-        router.get('/:id', this.get);
-        router.post('/', this.post);
-        router.put('/:id', this.put);
+        router.get('/', this.getAll.bind(this));
+        router.get('/:id', this.get.bind(this));
+        router.post('/', this.post.bind(this));
+        router.put('/:id', this.put.bind(this));
         return router;
     }
 }

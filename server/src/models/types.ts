@@ -6,4 +6,4 @@ export interface ModelAttributes {
     updatedAt: Date;
 }
 export type ModelCreationAttributes<T extends ModelAttributes> = Optional<T, 'id'>;
-export interface ModelClass<T extends ModelAttributes> extends Model<T, ModelCreationAttributes<T>> {}
+export type ModelClass<T extends ModelAttributes> = Model<T, ModelCreationAttributes<T>>;

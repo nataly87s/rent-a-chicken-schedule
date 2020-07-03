@@ -4,11 +4,16 @@ import config from '../config/config.json';
 
 export * from './types';
 
-const sequelizeConfig = process.env.NODE_ENV === 'production' ? config.production : config.development;
+const getSequelizeClient = () => {
+    const {use_env_variable, ...sequelizeConfig} = (process.env.NODE_ENV === 'production'
+        ? config.production
+        : config.development) as Options & {use_env_variable?: string};
+    if (use_env_variable) {
+        return new Sequelize(process.env[use_env_variable]!, sequelizeConfig);
+    }
+    return new Sequelize(sequelizeConfig);
+};
 
-console.log('startup', process.env.NODE_ENV, sequelizeConfig);
-console.log('DATABASE_URL', process.env.DATABASE_URL);
-
-export const sequelize = new Sequelize(sequelizeConfig as Options);
+export const sequelize = getSequelizeClient();
 
 initialize(sequelize);

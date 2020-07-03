@@ -51,6 +51,7 @@ const ReportsPage = ({customerId}: ReportsPageProps) => {
                             <TableCell>Start</TableCell>
                             <TableCell>End</TableCell>
                             <TableCell>Address</TableCell>
+                            <TableCell>Notes</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -64,6 +65,7 @@ const ReportsPage = ({customerId}: ReportsPageProps) => {
                                     <TableCell>{format(e.start, 'PP p')}</TableCell>
                                     <TableCell>{format(e.end, 'PP p')}</TableCell>
                                     <TableCell>{e.address}</TableCell>
+                                    <TableCell>{e.notes}</TableCell>
                                 </TableRow>
                             );
                         })}

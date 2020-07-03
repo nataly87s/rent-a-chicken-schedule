@@ -171,15 +171,6 @@ const CustomerCard = ({customer: initialCustomer}: CustomerCardProps) => {
                             </Button>
                         </>
                     )}
-                    {!initialCustomer && (
-                        <Button
-                            size="small"
-                            disabled={isEqual(emptyCustomer, customer)}
-                            onClick={() => setCustomer(emptyCustomer)}
-                        >
-                            Cancel
-                        </Button>
-                    )}
                     <Button
                         size="small"
                         disabled={
